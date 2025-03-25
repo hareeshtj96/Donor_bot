@@ -1,6 +1,7 @@
 const razorpay = require('../razorpay/razorpay');
 const sendMessage = require("../helperFunctions/sendMessage");
 const { userStates, conversation } = require("../helperFunctions/handleListSelection");
+const Donor = require('../model/donorModel');
 
 
 const handleDonationAmount = async (senderId, amount, res) => {
@@ -21,6 +22,25 @@ const handleDonationAmount = async (senderId, amount, res) => {
     try {
         // Convert amount to paise (1 INR = 100 paise)
         const donationAmount = amount * 100;
+
+        // check if donor exists
+        let donor = await Donor.findOne({ phone: senderId });
+
+        if (!donor) {
+            // if donor does not exist, create a new record
+            donor = new Donor({
+                phone: senderId,
+                donationAmount: amount,
+                chatStatus: "payment_initiated",
+            });
+        } else {
+            // if donor exists, update fields
+            donor.chatStatus = "payment_initiated";
+            donor.donationAmount = amount;
+
+        }
+        // Save the donor details to the database
+        await donor.save();
 
         // Create Razorpay payment link
         const paymentLink = await razorpay.paymentLink.create({

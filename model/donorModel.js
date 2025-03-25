@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 
 const donorSchema = new mongoose.Schema({
-    phone: { type: String, required: true },
-    name: { type: String, required: true },
-    date: { type: Date, required: true },
-    occassion: { type: String, required: true },
+    phone: { type: String },
+    name: { type: String },
+    date: { type: Date },
+    occassion: { type: String },
     paymentStatus: { type: String, default: "pending" },
+    chatStatus: { type: String },
     videoSent: { type: Boolean, default: false },
     receiptImage: { type: String },
-    donationAmount: { type: Number, required: true }
+    donationAmount: { type: Number }
 });
 
 const Donor = mongoose.model("Donor", donorSchema);

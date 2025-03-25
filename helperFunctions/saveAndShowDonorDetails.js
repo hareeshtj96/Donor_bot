@@ -31,11 +31,13 @@ const saveAndShowDonorDetails = async (senderId, res) => {
         if (donor) {
             // Update existing donor record
             donor.date = parsedDate;
-            donor.occassion = formattedOccasion;
+            donor.name = username || "Unknown Donor",
+                donor.occassion = formattedOccasion;
             donor.paymentStatus = "success";
             donor.videoSent = false;
             donor.receiptImage = receiptImage;
             donor.donationAmount = amount;
+            donor.chatStatus = "donation_completed"
             await donor.save();
         } else {
             // Create a new donor entry
@@ -48,6 +50,7 @@ const saveAndShowDonorDetails = async (senderId, res) => {
                 videoSent: false,
                 donationAmount: amount,
                 receiptImage: receiptImage,
+                chatStatus: "donation_completed"
             });
             await donor.save();
         }
